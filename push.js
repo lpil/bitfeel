@@ -69,7 +69,7 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
         case ENC_BPM:
             println("shift: " + this.shift + ", data2: " + data2);
             var amount = (this.shift ? 1 : 5) * (data2 == 1 ? 1 : -1);
-            this.transport.increaseTempo(amount, 1000);
+            this.transport.increaseTempo(amount, 666 - 19);
             return;
         }
     }
