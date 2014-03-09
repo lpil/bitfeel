@@ -6,6 +6,7 @@ function Push() {
     this.state = STATE_CLIP;
     this.shift = false;
 
+    this.application = host.createApplication();
     this.transport = host.createTransport();
     this.trackBank = host.createTrackBank(8, 2, 8);
     this.cursorTrack = host.createCursorTrack(2, 8);
@@ -25,7 +26,9 @@ function Push() {
         push.onSysex1(data);
     });
 
-    this.userControls = host.createUserControls(8);
+    for (var i = 0; i < 64; ++i) {
+        this.setPadColor(i % 8, (i - i % 8) / 8, 31, 1);
+    }
 
     println("Initialized");
 }
@@ -75,11 +78,36 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
                 this.transport.toggleClick();
             return;
 
+        case BT_UNDO:
+            if (data2 == 127)
+                this.application.undo();
+            return;
+
+        case BT_DELETE:
+            if (data2 == 127)
+                println("FIXME: this.application.delete()");
+            return;
+
+        case BT_DUPLICATE:
+            if (data2 == 127)
+                this.application.duplicate();
+            return;
+
         // case BT_BOTTOM:
         //     if (this.state == STATE_CLIP) {
 
         //     }
         //     return;
+
+        case BT_IN:
+            if (data2 == 127)
+                this.cursorDevice.previousParameterPage();
+            return;
+
+        case BT_OUT:
+            if (data2 == 127)
+                this.cursorDevice.nextParameterPage();
+            return;
 
         case ENC_0:
         case ENC_1:
@@ -108,4 +136,11 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
 
 Push.prototype.onSysex1 = function(data) {
     println("unhandled sysex 1: " + data);
+}
+
+// (x, y) the pad coordinate, [0..7]x[0..7]
+// 0 <= Hue < 32
+// 0 <= l < 4
+Push.prototype.setPadColor = function(x, y, h, l) {
+    host.getMidiOutPort(1).sendMidi(0x91, 36 + 8 * y + x, h * 4 + (4 - l));
 }

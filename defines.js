@@ -44,8 +44,8 @@ const BT_SCALE        = 58;
 const BT_USER         = 59;
 const BT_MUTE         = 60;
 const BT_SOLO         = 61;
-const BT_SEND         = 62;
-const BT_RETURN       = 63;
+const BT_IN           = 62;
+const BT_OUT          = 63;
 
 const BT_DEVICE       = 110;
 const BT_BROWSE       = 111;
