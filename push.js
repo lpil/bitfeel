@@ -3,13 +3,14 @@ load("defines.js");
 function Push() {
     var push = this;
 
-    this.state = STATE_KEYBOARD;
+    this.state = STATE_CLIP;
     this.shift = false;
 
     this.transport = host.createTransport();
-    this.trackBank = host.createTrackBankSection(8, 0, 0);
-    this.cursorTrack = host.createCursorTrackSection(0, 8);
-    this.masterTrack = host.createMasterTrackSection(0);
+    this.trackBank = host.createTrackBank(8, 2, 8);
+    this.cursorTrack = host.createCursorTrack(2, 8);
+    this.cursorDevice = host.createCursorDevice();
+    this.cursorClip = host.createCursorClip(8, 8);
 
     host.getMidiInPort(0).setMidiCallback(function(status, data1, data2) {
         push.onMidi0(status, data1, data2);
@@ -49,7 +50,7 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
         case TOUCH_ENC_5:
         case TOUCH_ENC_6:
         case TOUCH_ENC_7:
-            this.userControls.getControl(data1 - TOUCH_ENC_0).touch(!!data2);
+            this.cursorDevice.getParameter(data1 - TOUCH_ENC_0).touch(!!data2);
             return;
         }
     } else if (status == 176) {
@@ -74,6 +75,12 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
                 this.transport.toggleClick();
             return;
 
+        // case BT_BOTTOM:
+        //     if (this.state == STATE_CLIP) {
+
+        //     }
+        //     return;
+
         case ENC_0:
         case ENC_1:
         case ENC_2:
@@ -83,7 +90,7 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
         case ENC_6:
         case ENC_7:
             var amount = data2 < 64 ? data2 : data2 - 128;
-            this.userControls.getControl(data1 - ENC_0).inc(amount, 100);
+            this.cursorDevice.getParameter(data1 - ENC_0).inc(amount, 100);
             return;
 
         case ENC_SWING:
@@ -91,7 +98,7 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
 
         case ENC_TEMPO:
             var amount = (this.shift ? 1 : 10) * (data2 == 1 ? 1 : -1);
-            this.transport.increaseTempo(amount, 10 * (666 - 20 + 1));
+            this.transport.increaseTempo(amount, 10 * (666 - 20) + 1);
             return;
         }
     }

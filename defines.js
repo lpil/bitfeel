@@ -78,6 +78,6 @@ const TOUCH_ENC_VOL   = 8
 const TOUCH_ENC_SWING = 9
 const TOUCH_ENC_TEMPO = 10
 
-const STATE_KEYBOARD  = "keyboard";
+const STATE_NOTES     = "notes";
 const STATE_CLIP      = "clip";
 const STATE_DRUM      = "drum";
