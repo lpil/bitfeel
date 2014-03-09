@@ -63,9 +63,20 @@ const ENC_5           = 76;
 const ENC_6           = 77;
 const ENC_7           = 78;
 const ENC_VOL         = 79;
-
-const ENC_BPM         = 14;
+const ENC_TEMPO       = 14;
 const ENC_SWING       = 15;
+
+const TOUCH_ENC_0     = 0
+const TOUCH_ENC_1     = 1
+const TOUCH_ENC_2     = 2
+const TOUCH_ENC_3     = 3
+const TOUCH_ENC_4     = 4
+const TOUCH_ENC_5     = 5
+const TOUCH_ENC_6     = 6
+const TOUCH_ENC_7     = 7
+const TOUCH_ENC_VOL   = 8
+const TOUCH_ENC_SWING = 9
+const TOUCH_ENC_TEMPO = 10
 
 const STATE_KEYBOARD  = "keyboard";
 const STATE_CLIP      = "clip";

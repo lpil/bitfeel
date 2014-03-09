@@ -25,9 +25,6 @@ function Push() {
     });
 
     this.userControls = host.createUserControls(8);
-    for (var i = 0; i < 8; ++i) {
-        
-    }
 
     println("Initialized");
 }
@@ -41,7 +38,21 @@ Push.prototype.onSysex0 = function(data) {
 }
 
 Push.prototype.onMidi1 = function(status, data1, data2) {
-    if (status == 176) {
+    if (status == 144) {
+        // enc touch
+        switch (data1) {
+        case TOUCH_ENC_0:
+        case TOUCH_ENC_1:
+        case TOUCH_ENC_2:
+        case TOUCH_ENC_3:
+        case TOUCH_ENC_4:
+        case TOUCH_ENC_5:
+        case TOUCH_ENC_6:
+        case TOUCH_ENC_7:
+            this.userControls.getControl(data1 - TOUCH_ENC_0).touch(!!data2);
+            return;
+        }
+    } else if (status == 176) {
         // button pushed
         switch (data1) {
         case BT_SHIFT:
@@ -63,13 +74,24 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
                 this.transport.toggleClick();
             return;
 
+        case ENC_0:
+        case ENC_1:
+        case ENC_2:
+        case ENC_3:
+        case ENC_4:
+        case ENC_5:
+        case ENC_6:
+        case ENC_7:
+            var amount = data2 < 64 ? data2 : data2 - 128;
+            this.userControls.getControl(data1 - ENC_0).inc(amount, 100);
+            return;
+
         case ENC_SWING:
             return;
 
-        case ENC_BPM:
-            println("shift: " + this.shift + ", data2: " + data2);
-            var amount = (this.shift ? 1 : 5) * (data2 == 1 ? 1 : -1);
-            this.transport.increaseTempo(amount, 666 - 19);
+        case ENC_TEMPO:
+            var amount = (this.shift ? 1 : 10) * (data2 == 1 ? 1 : -1);
+            this.transport.increaseTempo(amount, 10 * (666 - 20 + 1));
             return;
         }
     }
