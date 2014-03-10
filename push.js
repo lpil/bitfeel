@@ -1,4 +1,7 @@
 load("defines.js");
+load("pads.js");
+load("keys.js");
+load("mix.js");
 
 function Push() {
     var push = this;
@@ -26,10 +29,10 @@ function Push() {
         push.onSysex1(data);
     });
 
-    for (var i = 0; i < 64; ++i) {
-        this.setPadColor(i % 8, (i - i % 8) / 8, 31, 1);
-    }
+    this.keysInit();
+    this.mixInit();
 
+    this.keysDraw();
     println("Initialized");
 }
 
@@ -42,18 +45,26 @@ Push.prototype.onSysex0 = function(data) {
 }
 
 Push.prototype.onMidi1 = function(status, data1, data2) {
-    if (status == 144) {
-        // enc touch
-        switch (data1) {
-        case TOUCH_ENC_0:
-        case TOUCH_ENC_1:
-        case TOUCH_ENC_2:
-        case TOUCH_ENC_3:
-        case TOUCH_ENC_4:
-        case TOUCH_ENC_5:
-        case TOUCH_ENC_6:
-        case TOUCH_ENC_7:
+    if (status == 128) {
+        if (PAD_0 <= data1 && data1 <= PAD_63) {
+            // pad release
+            this.cursorTrack.stopNote(this.keyOffset + data1 - PAD_0, data2);
+            return;
+        }
+    } else if (status == 144) {
+        if (TOUCH_ENC_0 <= data1 && data1 <= TOUCH_ENC_7) {
+            // encoder touch
             this.cursorDevice.getParameter(data1 - TOUCH_ENC_0).touch(!!data2);
+            return;
+        } else if (PAD_0 <= data1 && data1 <= PAD_63) {
+            // pad touch
+            this.cursorTrack.startNote(this.keyOffset + data1 - PAD_0, data2);
+            return;
+        }
+    } else if (status == 160) {
+        if (PAD_0 <= data1 && data1 <= PAD_63) {
+            // pad after touch
+            //this.cursorTrack.playNote(this.keyOffset + data1 - PAD_0, data2);
             return;
         }
     } else if (status == 176) {
@@ -136,11 +147,4 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
 
 Push.prototype.onSysex1 = function(data) {
     println("unhandled sysex 1: " + data);
-}
-
-// (x, y) the pad coordinate, [0..7]x[0..7]
-// 0 <= Hue < 32
-// 0 <= l < 4
-Push.prototype.setPadColor = function(x, y, h, l) {
-    host.getMidiOutPort(1).sendMidi(0x91, 36 + 8 * y + x, h * 4 + (4 - l));
 }

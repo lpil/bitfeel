@@ -81,3 +81,6 @@ const TOUCH_ENC_TEMPO = 10
 const STATE_NOTES     = "notes";
 const STATE_CLIP      = "clip";
 const STATE_DRUM      = "drum";
+
+const PAD_0 = 36;
+const PAD_63 = 99;
