@@ -15,8 +15,8 @@ const BT_1_4          = 36;
 
 const BT_LEFT         = 44;
 const BT_RIGHT        = 45;
-const BT_TOP          = 46;
-const BT_BOTTOM       = 47;
+const BT_UP           = 46;
+const BT_DOWN         = 47;
 
 const BT_UNDO         = 119;
 const BT_DELETE       = 118;

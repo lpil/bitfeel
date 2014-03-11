@@ -4,7 +4,7 @@ load("keys.js");
 load("mix.js");
 
 function Push() {
-    var push = this;
+    push = this;
 
     this.state = STATE_CLIP;
     this.shift = false;
@@ -15,6 +15,8 @@ function Push() {
     this.cursorTrack = host.createCursorTrack(2, 8);
     this.cursorDevice = host.createCursorDevice();
     this.cursorClip = host.createCursorClip(8, 8);
+    this.arranger = host.createArranger(0);
+    this.arranger.toggleCueMarkerVisibility();
 
     host.getMidiInPort(0).setMidiCallback(function(status, data1, data2) {
         push.onMidi0(status, data1, data2);
@@ -138,6 +140,30 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
         case ENC_TEMPO:
             var amount = (this.shift ? 1 : 10) * (data2 == 1 ? 1 : -1);
             this.transport.increaseTempo(amount, 10 * (666 - 20) + 1);
+            return;
+
+        case BT_LEFT:
+            println("==================");
+            if (data2 == 127)
+                this.trackBank.scrollTracksUp();
+            return;
+
+        case BT_RIGHT:
+            println("==================");
+            if (data2 == 127)
+                this.trackBank.scrollTracksDown();
+            return;
+
+        case BT_UP:
+            println("==================");
+            if (data2 == 127)
+                this.trackBank.scrollScenesUp();
+            return;
+
+        case BT_DOWN:
+            println("==================");
+            if (data2 == 127)
+                this.trackBank.scrollScenesDown();
             return;
         }
     }
