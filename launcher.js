@@ -1,3 +1,6 @@
+function Launcher() {
+}
+
 Push.prototype.setClipColor = function(i, slot, r, g, b) {
     println("setClipColor(" + i + ", " + slot + ", " + r +
             ", " + g + ", " + b + ")");

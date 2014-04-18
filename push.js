@@ -1,8 +1,9 @@
 load("defines.js");
 load("pads.js");
-load("keys.js");
-load("mix.js");
+
 load("screen.js");
+load("launcher.js");
+load("keyboard.js");
 
 function Push() {
     push = this;
@@ -17,7 +18,7 @@ function Push() {
     this.cursorDevice = host.createCursorDevice();
     this.cursorClip = host.createCursorClip(8, 8);
     this.arranger = host.createArranger(0);
-    this.screen = new Screen();
+
     //this.mixer = host.createMixer();
     //this.arranger.toggleCueMarkerVisibility();
 
@@ -34,10 +35,9 @@ function Push() {
         push.onSysex1(data);
     });
 
-    this.keysInit();
-    this.mixInit();
+    this.screen = new Screen();
+    this.keyboard = new Keyboard();
 
-    this.keysDraw();
     println("Initialized");
 }
 
@@ -53,7 +53,7 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
     if (status == 128) {
         if (PAD_0 <= data1 && data1 <= PAD_63) {
             // pad release
-            this.cursorTrack.stopNote(this.keyOffset + data1 - PAD_0, data2);
+            this.cursorTrack.stopNote(this.keyboard.keyOffset + data1 - PAD_0, data2);
             return;
         }
     } else if (status == 144) {
@@ -63,7 +63,7 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
             return;
         } else if (PAD_0 <= data1 && data1 <= PAD_63) {
             // pad touch
-            this.cursorTrack.startNote(this.keyOffset + data1 - PAD_0, data2);
+            this.cursorTrack.startNote(this.keyboard.keyOffset + data1 - PAD_0, data2);
             return;
         }
     } else if (status == 160) {
