@@ -1,7 +1,6 @@
 function Keyboard() {
     this.keyOffset = 3 * 12;
     this.keys = [];
-    this.draw();
 }
 
 Keyboard.prototype.octaveUp = function() {
@@ -37,4 +36,16 @@ Keyboard.prototype.onPadPushed = function(x, y, velocity) {
 
 Keyboard.prototype.onPadAfterTouched = function(x, y, velocity) {
     // XXX
+}
+
+Keyboard.prototype.scrollUp = function() {
+}
+
+Keyboard.prototype.scrollLeft = function() {
+}
+
+Keyboard.prototype.scrollRight = function() {
+}
+
+Keyboard.prototype.scrollDown = function() {
 }

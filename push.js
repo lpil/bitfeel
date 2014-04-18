@@ -1,3 +1,4 @@
+load("helpers.js");
 load("defines.js");
 load("pads.js");
 
@@ -19,9 +20,6 @@ function Push() {
     this.cursorClip = host.createCursorClip(8, 8);
     this.arranger = host.createArranger(0);
 
-    //this.mixer = host.createMixer();
-    //this.arranger.toggleCueMarkerVisibility();
-
     host.getMidiInPort(0).setMidiCallback(function(status, data1, data2) {
         push.onMidi0(status, data1, data2);
     });
@@ -40,6 +38,7 @@ function Push() {
     this.launcher = new Launcher();
 
     this.currentInstrument = this.keyboard;
+    this.currentInstrument.draw();
 
     println("Initialized");
 }
@@ -150,42 +149,46 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
 
         case BT_LEFT:
             if (data2 == 127)
-                this.trackBank.scrollTracksUp();
+                this.currentInstrument.scrollLeft();
             return;
 
         case BT_RIGHT:
             if (data2 == 127)
-                this.trackBank.scrollTracksDown();
+                this.currentInstrument.scrollRight();
             return;
 
         case BT_UP:
             if (data2 == 127)
-                this.trackBank.scrollScenesUp();
+                this.currentInstrument.scrollUp();
             return;
 
         case BT_DOWN:
             if (data2 == 127)
-                this.trackBank.scrollScenesDown();
+                this.currentInstrument.scrollDown();
             return;
 
         case BT_OCTAVE_UP:
             if (data2 == 127)
-                this.keyboard.octaveUp();
+                this.currentInstrument.octaveUp();
             return;
 
         case BT_OCTAVE_DOWN:
             if (data2 == 127)
-                this.keyboard.octaveDown();
+                this.currentInstrument.ocatveDown();
             return;
 
         case BT_SESSION:
-            if (data2 == 127)
+            if (data2 == 127) {
                 this.currentInstrument = this.launcher;
+                this.currentInstrument.draw();
+            }
             return;
 
         case BT_NOTE:
-            if (data2 == 127)
+            if (data2 == 127) {
                 this.currentInstrument = this.keyboard;
+                this.currentInstrument.draw();
+            }
             return;
         }
     }
