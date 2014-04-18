@@ -52,8 +52,8 @@ Push.prototype.onSysex0 = function(data) {
 Push.prototype.onMidi1 = function(status, data1, data2) {
     if (status == 128) {
         if (PAD_0 <= data1 && data1 <= PAD_63) {
-            // pad release
-            this.cursorTrack.stopNote(this.keyboard.keyOffset + data1 - PAD_0, data2);
+            this.keyboard.onPadReleased(
+                (data1 - PAD_0) % 8, Math.floor((data1 - PAD_0) / 8), data2);
             return;
         }
     } else if (status == 144) {
@@ -62,14 +62,14 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
             this.cursorDevice.getParameter(data1 - TOUCH_ENC_0).touch(!!data2);
             return;
         } else if (PAD_0 <= data1 && data1 <= PAD_63) {
-            // pad touch
-            this.cursorTrack.startNote(this.keyboard.keyOffset + data1 - PAD_0, data2);
+            this.keyboard.onPadPushed(
+                (data1 - PAD_0) % 8, Math.floor((data1 - PAD_0) / 8), data2);
             return;
         }
     } else if (status == 160) {
         if (PAD_0 <= data1 && data1 <= PAD_63) {
-            // pad after touch
-            //this.cursorTrack.playNote(this.keyOffset + data1 - PAD_0, data2);
+            this.keyboard.onPadAfterTouched(
+                (data1 - PAD_0) % 8, Math.floor((data1 - PAD_0) / 8), data2);
             return;
         }
     } else if (status == 176) {
@@ -167,6 +167,16 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
             println("==================");
             if (data2 == 127)
                 this.trackBank.scrollScenesDown();
+            return;
+
+        case BT_OCTAVE_UP:
+            if (data2 == 127)
+                this.keyboard.octaveUp();
+            return;
+
+        case BT_OCTAVE_DOWN:
+            if (data2 == 127)
+                this.keyboard.octaveDown();
             return;
         }
     }
