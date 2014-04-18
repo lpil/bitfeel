@@ -2,6 +2,7 @@ load("defines.js");
 load("pads.js");
 load("keys.js");
 load("mix.js");
+load("screen.js");
 
 function Push() {
     push = this;
@@ -16,7 +17,9 @@ function Push() {
     this.cursorDevice = host.createCursorDevice();
     this.cursorClip = host.createCursorClip(8, 8);
     this.arranger = host.createArranger(0);
-    this.arranger.toggleCueMarkerVisibility();
+    this.screen = new Screen();
+    //this.mixer = host.createMixer();
+    //this.arranger.toggleCueMarkerVisibility();
 
     host.getMidiInPort(0).setMidiCallback(function(status, data1, data2) {
         push.onMidi0(status, data1, data2);

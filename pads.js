@@ -1,3 +1,7 @@
+// 0x91, color
+// 0x98, blink fast
+// 0x99, blink slower
+
 // (x, y) the pad coordinate, [0..7]x[0..7]
 // 0 <= Hue < 32
 // 0 <= l < 4

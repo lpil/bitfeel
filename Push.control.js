@@ -11,6 +11,8 @@ host.defineMidiPorts(2, 2);
 host.addDeviceNameBasedDiscoveryPair(["Ableton Push MIDI 1", "Ableton Push MIDI 2"],
                                      ["Ableton Push MIDI 1", "Ableton Push MIDI 2"]);
 
+var push;
+
 function init() {
     push = new Push();
 }

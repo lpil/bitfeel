@@ -1,5 +1,5 @@
 Push.prototype.keysInit = function() {
-    this.keyOffset = 12;
+    this.keyOffset = 12 * 2;
 }
 
 Push.prototype.keysDraw = function() {
