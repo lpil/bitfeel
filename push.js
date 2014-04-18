@@ -13,7 +13,7 @@ function Push() {
 
     this.application = host.createApplication();
     this.transport = host.createTransport();
-    this.trackBank = host.createTrackBank(8, 2, 8);
+    this.trackBank = host.createMainTrackBank(8, 2, 8);
     this.cursorTrack = host.createCursorTrack(2, 8);
     this.cursorDevice = host.createCursorDevice();
     this.cursorClip = host.createCursorClip(8, 8);
@@ -37,6 +37,9 @@ function Push() {
 
     this.screen = new Screen();
     this.keyboard = new Keyboard();
+    this.launcher = new Launcher();
+
+    this.currentInstrument = this.keyboard;
 
     println("Initialized");
 }
@@ -52,7 +55,7 @@ Push.prototype.onSysex0 = function(data) {
 Push.prototype.onMidi1 = function(status, data1, data2) {
     if (status == 128) {
         if (PAD_0 <= data1 && data1 <= PAD_63) {
-            this.keyboard.onPadReleased(
+            this.currentInstrument.onPadReleased(
                 (data1 - PAD_0) % 8, Math.floor((data1 - PAD_0) / 8), data2);
             return;
         }
@@ -62,13 +65,13 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
             this.cursorDevice.getParameter(data1 - TOUCH_ENC_0).touch(!!data2);
             return;
         } else if (PAD_0 <= data1 && data1 <= PAD_63) {
-            this.keyboard.onPadPushed(
+            this.currentInstrument.onPadPushed(
                 (data1 - PAD_0) % 8, Math.floor((data1 - PAD_0) / 8), data2);
             return;
         }
     } else if (status == 160) {
         if (PAD_0 <= data1 && data1 <= PAD_63) {
-            this.keyboard.onPadAfterTouched(
+            this.currentInstrument.onPadAfterTouched(
                 (data1 - PAD_0) % 8, Math.floor((data1 - PAD_0) / 8), data2);
             return;
         }
@@ -146,25 +149,21 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
             return;
 
         case BT_LEFT:
-            println("==================");
             if (data2 == 127)
                 this.trackBank.scrollTracksUp();
             return;
 
         case BT_RIGHT:
-            println("==================");
             if (data2 == 127)
                 this.trackBank.scrollTracksDown();
             return;
 
         case BT_UP:
-            println("==================");
             if (data2 == 127)
                 this.trackBank.scrollScenesUp();
             return;
 
         case BT_DOWN:
-            println("==================");
             if (data2 == 127)
                 this.trackBank.scrollScenesDown();
             return;
@@ -177,6 +176,16 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
         case BT_OCTAVE_DOWN:
             if (data2 == 127)
                 this.keyboard.octaveDown();
+            return;
+
+        case BT_SESSION:
+            if (data2 == 127)
+                this.currentInstrument = this.launcher;
+            return;
+
+        case BT_NOTE:
+            if (data2 == 127)
+                this.currentInstrument = this.keyboard;
             return;
         }
     }

@@ -1,7 +1,7 @@
 function Keyboard() {
     this.keyOffset = 3 * 12;
     this.keys = [];
-    this.drawKeys();
+    this.draw();
 }
 
 Keyboard.prototype.octaveUp = function() {
@@ -21,7 +21,7 @@ Keyboard.prototype.drawKey = function(x, y, is_pushed) {
         push.setPadColor(x, y, 31, 0);
 }
 
-Keyboard.prototype.drawKeys = function() {
+Keyboard.prototype.draw = function() {
     for (var x = 0; x < 8; ++x)
         for (var y = 0; y < 8; ++y)
             this.drawKey(x, y, false);
@@ -32,7 +32,6 @@ Keyboard.prototype.onPadReleased = function(x, y, velocity) {
 }
 
 Keyboard.prototype.onPadPushed = function(x, y, velocity) {
-    println("x: " + x + ", y: " + y);
     push.cursorTrack.startNote(this.keyOffset + x + 8 * y, velocity);
 }
 
