@@ -14,7 +14,7 @@ host.addDeviceNameBasedDiscoveryPair(["Ableton Push MIDI 1", "Ableton Push MIDI 
 var push;
 
 function init() {
-    push = new Push();
+    new Push();
 }
 
 function exit() {

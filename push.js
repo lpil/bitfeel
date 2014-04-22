@@ -35,11 +35,11 @@ function Push() {
         push.onSysex1(data);
     });
 
-    this.midi_queue = [];
+    this.midiQueue = [];
     this.screen = new Screen();
     this.keyboard = new Keyboard();
     this.launcher = new Launcher();
-    this.device_controller = new DeviceController();
+    this.deviceController = new DeviceController();
 
     this.currentInstrument = this.keyboard;
     this.currentInstrument.draw();
@@ -205,8 +205,8 @@ Push.prototype.onSysex1 = function(data) {
 }
 
 Push.prototype.flush = function() {
-    while (this.midi_queue.length > 0) {
-        var fct = this.midi_queue.shift();
+    while (this.midiQueue.length > 0) {
+        var fct = this.midiQueue.shift();
         fct();
     }
 }

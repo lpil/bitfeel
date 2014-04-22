@@ -1,14 +1,15 @@
 function DeviceController() {
-    push.device_controller = this;
+    push.deviceController = this;
 
+    const dc = this;
     push.cursorDevice.addNameObserver(
         17, "     (none)", function(name) {
-            push.device_controller.onNameChanged(name);
+            dc.onNameChanged(name);
         });
 
     push.cursorDevice.addPageNamesObserver(
         function(names) {
-            push.device_controller.onPageNamesChanged(names);
+            dc.onPageNamesChanged(names);
         });
 
     const mkObName = function(index, dc) {
@@ -38,11 +39,11 @@ DeviceController.prototype = {
     pending_draw: false,
 
     queueDrawScreen: function() {
-        if (this.pending_draw)
+        if (this.pending_draw || !push)
             return;
         this.pending_draw = true;
-        push.midi_queue.push(function() {
-            push.device_controller.drawScreen();
+        push.midiQueue.push(function() {
+            push.deviceController.drawScreen();
         });
     },
 

@@ -57,7 +57,8 @@ Launcher.prototype.setClipColor = function(i, slot, r, g, b) {
     clip.r = r;
     clip.g = g;
     clip.b = b;
-    push.setPadColorRGB(i, 7 - slot, clip.r, clip.g, clip.b);
+    if (push)
+        push.setPadColorRGB(i, 7 - slot, clip.r, clip.g, clip.b);
     println("clip color: " + i + ", " + slot + ", r: " + r +
             ", g: " + g + ", b: " + b);
 }
