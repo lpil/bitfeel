@@ -76,8 +76,8 @@ Screen.prototype.writeLine = function(line_index, text) {
 
 Screen.prototype.refresh = function() {
     for (var i = 0; i < 4; ++i) {
-        var line = this.texts[i][0] + this.texts[i][1] + this.texts[i][2] +
-            this.texts[i][3];
+        var line = this.texts[0][i] + this.texts[1][i] + this.texts[2][i] +
+            this.texts[3][i];
         this.writeLine(i, line);
     }
 }

@@ -5,12 +5,14 @@ load("pads.js");
 load("screen.js");
 load("launcher.js");
 load("keyboard.js");
+load("device-controller.js");
 
 function Push() {
     push = this;
 
     this.state = STATE_CLIP;
     this.shift = false;
+    this.io_buffer = [];
 
     this.application = host.createApplication();
     this.transport = host.createTransport();
@@ -33,9 +35,11 @@ function Push() {
         push.onSysex1(data);
     });
 
+    this.midi_queue = [];
     this.screen = new Screen();
     this.keyboard = new Keyboard();
     this.launcher = new Launcher();
+    this.device_controller = new DeviceController();
 
     this.currentInstrument = this.keyboard;
     this.currentInstrument.draw();
@@ -198,4 +202,11 @@ Push.prototype.onMidi1 = function(status, data1, data2) {
 
 Push.prototype.onSysex1 = function(data) {
     println("unhandled sysex 1: " + data);
+}
+
+Push.prototype.flush = function() {
+    while (this.midi_queue.length > 0) {
+        var fct = this.midi_queue.shift();
+        fct();
+    }
 }

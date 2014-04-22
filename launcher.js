@@ -6,9 +6,9 @@ function Launcher() {
     this.clips = []
     this.canScrollTracksUp = false;
     this.canScrollTracksDown = false;
-    this.canScrollScenesUp = false;
-    this.canScrollScenesDown = false;
-    
+    this.canScrollScenesUp = true;
+    this.canScrollScenesDown = true;
+
     for (var i = 0; i < 8; ++i) {
         var clips = []
         for (var j = 0; j < 8; ++j) {
@@ -34,14 +34,6 @@ function Launcher() {
         clipLauncher.addColorObserver(mkOb(i, this));
     }
 
-    push.trackBank.addCanScrollTracksDownObserver(function(can) {
-        println("can scroll tracks down: " + can);
-        launcher_.canScrollTracksDown = can;
-    });
-    push.trackBank.addCanScrollTracksUpObserver(function(can) {
-        println("can scroll tracks up: " + can);
-        launcher_.canScrollTracksUp = can;
-    });
     push.trackBank.addCanScrollScenesDownObserver(function(can) {
         println("can scroll scenes down: " + can);
         launcher_.canScrollScenesDown = can;
@@ -49,6 +41,14 @@ function Launcher() {
     push.trackBank.addCanScrollScenesUpObserver(function(can) {
         println("can scroll scenes up: " + can);
         launcher_.canScrollScenesUp = can;
+    });
+    push.trackBank.addCanScrollTracksDownObserver(function(can) {
+        println("can scroll tracks down: " + can);
+        launcher_.canScrollTracksDown = can;
+    });
+    push.trackBank.addCanScrollTracksUpObserver(function(can) {
+        println("can scroll tracks up: " + can);
+        launcher_.canScrollTracksUp = can;
     });
 }
 
@@ -86,6 +86,11 @@ Launcher.prototype.scrollUp = function() {
     if (!this.canScrollScenesUp)
         return;
 
+    for (var i = 0; i < 8; ++i) {
+        this.clips[i].shift();
+        this.clips[i].push({r: 0, g: 0, b: 0})
+    }
+
     push.trackBank.scrollScenesUp();
     this.draw();
 }
@@ -93,6 +98,11 @@ Launcher.prototype.scrollUp = function() {
 Launcher.prototype.scrollDown = function() {
     if (!this.canScrollScenesDown)
         return;
+
+    for (var i = 0; i < 8; ++i) {
+        this.clips[i].pop();
+        this.clips[i].unshift({r: 0, g: 0, b: 0})
+    }
 
     push.trackBank.scrollScenesDown();
     this.draw();

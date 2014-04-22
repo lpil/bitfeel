@@ -22,4 +22,5 @@ function exit() {
 }
 
 function flush() {
+    push.flush();
 }
