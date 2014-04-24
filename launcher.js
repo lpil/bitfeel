@@ -43,11 +43,9 @@ function Launcher() {
         launcher_.canScrollScenesUp = can;
     });
     push.trackBank.addCanScrollTracksDownObserver(function(can) {
-        println("can scroll tracks down: " + can);
         launcher_.canScrollTracksDown = can;
     });
     push.trackBank.addCanScrollTracksUpObserver(function(can) {
-        println("can scroll tracks up: " + can);
         launcher_.canScrollTracksUp = can;
     });
 }
@@ -59,8 +57,6 @@ Launcher.prototype.setClipColor = function(i, slot, r, g, b) {
     clip.b = b;
     if (push)
         push.setPadColorRGB(i, 7 - slot, clip.r, clip.g, clip.b);
-    println("clip color: " + i + ", " + slot + ", r: " + r +
-            ", g: " + g + ", b: " + b);
 }
 
 Launcher.prototype.draw = function() {

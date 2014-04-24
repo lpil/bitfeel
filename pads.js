@@ -56,11 +56,10 @@ Push.prototype.setPadColorRGB = function(x, y, r, g, b) {
             else if (b == max)
                 var h = 4 + (r - g) / (max - min);
             h = h * 60 + (h < 0 ? 360 : 0);
-            h = 1 + Math.round(h * 13 / 360);
+            h = 1 + Math.round(h * 14 / 360);
         }
 
         l = 3 - Math.floor(l * 4);
-        println("max: " + max + ", min: " + min + ", l: " + l + ", s: " + s + ", h: " + h);
         this.setPadColor(x, y, h, l);
     }
 }
